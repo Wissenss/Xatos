@@ -43,7 +43,6 @@ class NavBar(tk.Frame):
                 LargeButton(self, button_tuple[0], button_tuple[1], button_tuple[2]).grid(row=0, column=pos, sticky="nswe")
                 pos+=1
             if i != len(self.content)-1: 
-                print("debug")
                 SectionDiv = ttk.Separator(self, orient=tk.VERTICAL)
                 SectionDiv.grid(row=0, column=pos, sticky="nswe", rowspan=2, pady=5, padx=5)
                 pos+=1 

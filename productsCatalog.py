@@ -16,7 +16,8 @@ class ProductsCatalog(simpledialog.Dialog):
         super().__init__(parent=owner)
 
     def body(self, frame):
-        self.geometry("400x300")
+        frame.pack(expand=True, fill=tk.BOTH, side=tk.TOP)
+        self.geometry("400x400")
         self.title("Catálogo de Productos")
         self.iconbitmap(default="./recursos/Fatcow-Farm-Fresh-Basket.ico")
         content = {
@@ -41,7 +42,10 @@ class ProductsCatalog(simpledialog.Dialog):
         self.list = ttk.Treeview(frame, columns=("Nombre", "Codigo"), show="headings")
         self.list.heading("Nombre", text="Nombre")
         self.list.heading("Codigo", text="Código")
-        self.list.pack(fill=tk.BOTH,  anchor=tk.CENTER, side=tk.BOTTOM, pady=(0, 10), padx=10,)
+
+        self.list.column("Codigo", anchor=tk.CENTER)
+
+        self.list.pack(fill=tk.BOTH, expand=True, pady=(0, 10), padx=10,)
         self.UpdateList()
 
     

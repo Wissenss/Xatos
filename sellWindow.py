@@ -25,19 +25,20 @@ class SellWindow(tk.Toplevel):
         self.leftPane = tk.Frame(self)
         self.leftPane.pack(side=tk.LEFT, fill=tk.BOTH, ipadx=10, ipady=10)
 
-        ttk.Separator(self.leftPane, orient=tk.VERTICAL).pack(side=tk.RIGHT, fill=tk.Y, padx=5, pady=5)
+        ttk.Separator(self.leftPane, orient=tk.VERTICAL).pack(side=tk.RIGHT, fill=tk.Y, padx=(10, 0), pady=5)
 
         buttoncontrol = tk.Frame(self.leftPane)
         buttoncontrol.pack(expand=True)
 
-        LargeButton(buttoncontrol, "Seleccionar", "./recursos/Fatcow-Farm-Fresh-Basket-remove.32.png", self.selectProduct).grid(row=0, column=0)
+        LargeButton(buttoncontrol, "Seleccionar", "./recursos/Fatcow-Farm-Fresh-Basket-put.32.png", self.selectProduct).grid(row=0, column=0)
+        LargeButton(buttoncontrol, "Cancelar", "./recursos/Fatcow-Farm-Fresh-Bin-closed.32.png", self.cancelSell).grid(row=0, column=3)
 
         ttk.Separator(buttoncontrol, orient=tk.HORIZONTAL).grid(row=1, column=0, columnspan=4, sticky="nswe", padx=5)
 
         LargeButton(buttoncontrol, "Agregar", "./recursos/Fatcow-Farm-Fresh-Cart-add.32.png", self.addProduct).grid(row=2, column=0)
         LargeButton(buttoncontrol, "Eliminar", "./recursos/Fatcow-Farm-Fresh-Cart-delete.32.png", self.deleteProduct).grid(row=2, column=1)
         LargeButton(buttoncontrol, "Restar", "./recursos/Fatcow-Farm-Fresh-Shopping-cart-reset.32.png", self.restProduct).grid(row=2, column=2)
-        LargeButton(buttoncontrol, "Generar Pago", "./recursos/Fatcow-Farm-Fresh-Coins-in-hand.32.png", self.generatePayment).grid(row=2, column=3, padx=10)
+        LargeButton(buttoncontrol, "Pago (F5)", "./recursos/Fatcow-Farm-Fresh-Coins-in-hand.32.png", self.generatePayment).grid(row=2, column=3, padx=10)
 
         bottomBar = tk.Frame(self.leftPane)
         bottomBar.pack(side=tk.TOP, fill=tk.X, pady=20)
@@ -48,12 +49,26 @@ class SellWindow(tk.Toplevel):
         self.EBarCode.bind("<Return>", self.enterProduct)
 
         self.rightPane = tk.Frame(self)
-        self.rightPane.pack(side=tk.RIGHT, fill=tk.BOTH, ipadx=10, ipady=10)
-        self.list = ttk.Treeview(self.rightPane, columns=("Producto", "PrecioUnitario", "Cantidad", "SubTotal"), show="headings")
+        self.rightPane.pack(side=tk.RIGHT, fill=tk.BOTH, ipadx=0, ipady=10, expand=True)
+
+        #list 
+        style = ttk.Style()
+        style.configure("SellList.Treeview.Heading", font=(None, 12))
+
+        self.list = ttk.Treeview(self.rightPane, columns=("Producto", "PrecioUnitario", "Cantidad", "SubTotal"), show="headings", style="SellList.Treeview", selectmode=tk.BROWSE)
         self.list.heading("Producto", text="Producto")
         self.list.heading("PrecioUnitario", text="Precio Unitario")
         self.list.heading("Cantidad", text="Cantidad")
         self.list.heading("SubTotal", text="SubTotal")
+
+        self.list.column("Producto", anchor=tk.W)
+        self.list.column("PrecioUnitario", anchor=tk.CENTER)
+        self.list.column("Cantidad", anchor=tk.CENTER)
+        self.list.column("SubTotal", anchor=tk.E)
+
+        self.list.tag_configure('font', font=(None, 12))
+        self.list.tag_configure('odd', background="#dedede")
+
         self.list.pack(expand=True, pady=10, padx=10, anchor="center", fill=tk.BOTH)
 
         pricePane = tk.Frame(self.rightPane)
@@ -61,6 +76,14 @@ class SellWindow(tk.Toplevel):
         self.priceDisplay = tk.Label(pricePane, text="$0.00", font=("helvetica", 14))
         self.priceDisplay.pack(side=tk.RIGHT)
         tk.Label(pricePane, text="Total", font=("helvetica", 14)).pack(side=tk.RIGHT, padx=10)
+
+        #shortcuts
+        self.bind("<F5>", self.F5shortCut)
+
+        self.BfocusBarCode()
+
+    def F5shortCut(self, event):
+        self.generatePayment()
 
     def generatePayment(self):
         if self.Total == None or self.Total <= 0:
@@ -76,9 +99,18 @@ class SellWindow(tk.Toplevel):
         self.addProduct()
         self.EBarCode.delete(0, tk.END)
 
+    def renderTags(self):
+        for index, item in enumerate(self.list.get_children()):
+            tags = ()
+            if index%2==0:
+                tags = ('font', 'odd')
+            else:
+                tags = ('font')
+            
+            self.list.item(item, tags=tags)
+
     def addProduct(self):
         code = self.EBarCode.get()
-        print(code)
         if code == None or code == "":
             return
         result = Server().SvcProducts.getProductFromCode(code)
@@ -92,9 +124,10 @@ class SellWindow(tk.Toplevel):
         try:
             self.list.insert("", tk.END, product.ProductId, values=(
                 product.Name,
-                product.Price,
+                f"${product.Price:.2f}",
                 cantidad,
-                product.Price * cantidad))
+                f"${product.Price * cantidad:.2f}"
+            ))
         except:
             iid = product.ProductId
             cantidad = self.list.item(iid)["values"][2] + 1
@@ -102,17 +135,19 @@ class SellWindow(tk.Toplevel):
 
             self.list.item(iid, values=(
                 product.Name,
-                product.Price,
+                f"${product.Price:.2f}",
                 cantidad,
-                product.Price * cantidad
+                f"${product.Price * cantidad:.2f}"
             ))
 
+        self.renderTags()
         self.updatePrice()
 
     def updatePrice(self):
         total = 0
         for iid in self.list.get_children():
-            total += float(self.list.item(iid)["values"][3])
+            stringNum = self.list.item(iid)["values"][3].replace("$", "")
+            total += float(stringNum)
 
         self.priceDisplay.config(text=f"${total:.2f}")
         self.Total = total
@@ -124,6 +159,7 @@ class SellWindow(tk.Toplevel):
 
         self.list.delete(iid)
 
+        self.renderTags()
         self.updatePrice()
 
     def restProduct(self):
@@ -158,3 +194,15 @@ class SellWindow(tk.Toplevel):
     def BfocusBarCode(self):
         self.EBarCode.delete(0, tk.END)
         self.EBarCode.focus()
+
+    def clearData(self):
+        for item in self.list.get_children():
+            self.list.delete(item)
+
+        self.updatePrice()
+        self.BfocusBarCode()
+
+    def cancelSell(self):
+        if not(messagebox.askokcancel(parent=self, title="", message=f"Esta accion borrará todos los productos marcados\nDesea continuar?")):
+            return
+        self.clearData()

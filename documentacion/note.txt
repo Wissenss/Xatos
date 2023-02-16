@@ -2,3 +2,8 @@ por ahora los iconos son de Farm Fresh Icons Pack
 aca el link https://www.iconarchive.com/show/farm-fresh-icons-by-fatcow.1.html
 
 25 tiene iconos de x1 x10 etc..
+
+para la validacion existe la propiedad validatecommand, esta poco documentada pero este post esta nice
+https://stackoverflow.com/questions/4140437/interactively-validating-entry-widget-content-in-tkinter/4140988#4140988
+este otro para algo mas low level
+https://stackoverflow.com/questions/55184324/why-is-calling-register-required-for-tkinter-input-validation/55231273#55231273
