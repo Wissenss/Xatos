@@ -1,10 +1,12 @@
 import tkinter as tk
-from tkinter import simpledialog
+from tkinter import ttk, simpledialog
 
 from kernel.server import Server
 from kernel.types import Product
 
 from constants import AccessMode
+
+from componentes.currencyEntry import CurrencyEntry
 
 class ProductData(simpledialog.Dialog):
     def __init__(self, owner, accessMode, ProductId):
@@ -14,56 +16,52 @@ class ProductData(simpledialog.Dialog):
 
         super().__init__(parent=owner)
 
-    def body(self, frame):
-        self.geometry("400x200")
+    def body(self, frame:tk.Frame):
+        self.geometry("400x215")
         self.title("Datos del Producto")
         self.iconbitmap("./recursos/Fatcow-Farm-Fresh-Basket.ico")   
+        frame.pack(expand=True, fill=tk.BOTH)
 
-        container = tk.Frame(frame)
-        container.pack(side=tk.TOP, expand=True, fill=tk.BOTH, padx=10, pady=10, ipadx=5, ipady=5)
+        frame.pack(side=tk.TOP, expand=True, padx=15, pady=(10, 0))  
 
-        # tk.Label(container, text="Id").grid(row=0, column=0, sticky="w")
-        # self.EProductId = tk.Entry(container)
-        # self.EProductId.grid(row=0, column=1)    
+        tk.Label(frame, text="Nombre").grid(row=1, column=0, sticky="w")
+        self.ENombre = tk.Entry(frame)
+        self.ENombre.grid(row=1, column=1, padx=(5, 15), pady=5, sticky="wesn")
 
-        tk.Label(container, text="Nombre").grid(row=1, column=0, sticky="w")
-        self.ENombre = tk.Entry(container)
-        self.ENombre.grid(row=1, column=1)
+        tk.Label(frame, text="Precio").grid(row=2, column=0, sticky="w")
+        self.EPrecio = CurrencyEntry(frame, width=20)
+        self.EPrecio.grid(row=2, column=1, padx=(5, 15), pady=5, sticky="w")
 
-        tk.Label(container, text="Precio").grid(row=2, column=0, sticky="w")
-        self.EPrecio = tk.Entry(container)
-        self.EPrecio.grid(row=2, column=1)
+        tk.Label(frame, text="Código").grid(row=3, column=0, sticky="w")
+        self.ECodigo = tk.Entry(frame)
+        self.ECodigo.grid(row=3, column=1, padx=(5, 15), pady=5, sticky="wesn")
 
-        tk.Label(container, text="Código").grid(row=3, column=0, sticky="w")
-        self.ECodigo = tk.Entry(container)
-        self.ECodigo.grid(row=3, column=1)
+        tk.Label(frame, text="Descripción").grid(row=4, column=0, sticky="wn")
 
-        tk.Label(container, text="Descripción").grid(row=4, column=0, sticky="w")
-        self.EDescripcion = tk.Entry(container)
-        self.EDescripcion.grid(row=4, column=1)
+        self.EDescripcion = tk.Text(frame, height=4)
+        self.EDescripcion.grid(row=4, column=1, padx=(5, 15), pady=(5, 0), sticky="wn")
 
-        lowerBar = tk.Frame(frame)
-        lowerBar.pack(side=tk.BOTTOM, fill=tk.X, padx=10, pady=(0, 10), ipadx=5)
         if self.Mode != AccessMode.CREATE:
             self.LoadData()
-        
-        # self.EProductId.configure(state=tk.DISABLED)
+
+    def buttonbox(self):
+        lowerBar = tk.Frame(self)
+        lowerBar.pack(side=tk.TOP, fill=tk.X, padx=10, pady=(0, 10), ipadx=5)
+
         if self.Mode == AccessMode.READ:
             BCerrar = tk.Button(lowerBar, text="Cancelar", command=self.BCancelar)
-            BCerrar.pack(side=tk.RIGHT)
+            BCerrar.pack(side=tk.RIGHT, pady=5)
 
             self.ENombre.configure(state=tk.DISABLED)
             self.EPrecio.configure(state=tk.DISABLED)
             self.ECodigo.configure(state=tk.DISABLED)
             self.EDescripcion.configure(state=tk.DISABLED)
         else:
-            BCancelar = tk.Button(lowerBar, text="Cancelar", command=self.BCancelar)
-            BCancelar.pack(side=tk.RIGHT)
-            BAceptar = tk.Button(lowerBar, text="Aceptar", command=self.BAceptar)
-            BAceptar.pack(side=tk.RIGHT) 
-
-    def buttonbox(self):
-        pass
+            pass
+            BCancelar = ttk.Button(lowerBar, text="Cancelar", command=self.BCancelar)
+            BCancelar.pack(side=tk.RIGHT, pady=5)
+            BAceptar = ttk.Button(lowerBar, text="Aceptar", command=self.BAceptar)
+            BAceptar.pack(side=tk.RIGHT, padx=5, pady=5) 
 
     def LoadData(self):
         product = Server().SvcProducts.getProductFromId(self.ProductId)
@@ -76,7 +74,7 @@ class ProductData(simpledialog.Dialog):
         product = Product((
             self.ProductId,
             self.ENombre.get(),
-            self.EDescripcion.get(),
+            self.EDescripcion.get("1.0", tk.END),
             self.EPrecio.get(),
             self.ECodigo.get(),
         ))

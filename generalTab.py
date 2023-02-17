@@ -4,8 +4,8 @@ from componentes.largeButton import LargeButton
 from kernel.server import Server
 
 from productsCatalog import ProductsCatalog 
-from sellWindow import SellWindow
-from sellReport import SellReport
+from saleWindow import SaleWindow
+from salesReport import SalesReport
 from constants import AccessMode
 
 class GeneralTab(tk.Frame):
@@ -23,23 +23,24 @@ class GeneralTab(tk.Frame):
         }
         bar = NavBar(self, content, False)
         bar.render()
-        bar.pack(side=tk.TOP, fill=tk.X, expand=False)
+        bar.pack(side=tk.TOP, fill=tk.X, expand=False, padx=5, pady=5)
 
         self.DVenta = None
         
 
     def BVentaClick(self):
         if self.DVenta == None:   
-            self.DVenta = SellWindow(self)
+            self.DVenta = SaleWindow(self)
             self.DVenta.protocol("WM_DELETE_WINDOW", self.DVentaClosing)
         else:
             self.DVenta.focus_force()
+            self.DVenta.BfocusBarCode()
 
     def BProductosClick(self):
         ProductsCatalog(self, AccessMode.UPDATE)
 
     def BInformeVentas(self):
-        SellReport(self, AccessMode.UPDATE)
+        SalesReport(self, AccessMode.UPDATE)
 
     #Handlers
     def DVentaClosing(self):

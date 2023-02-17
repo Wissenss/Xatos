@@ -7,8 +7,12 @@ class App(tk.Tk):
     def __init__(self):
         super().__init__()
         self.geometry("800x500")
-        self.title("Xato's")
+        self.minsize(800, 500)
+        self.title("Xatos")
         self.iconbitmap("./recursos/Fatcow-Farm-Fresh-Cash-terminal.ico")
+
+        self.style = ttk.Style(self)
+        self.style.theme_use("xpnative")
 
         self.tab_control = ttk.Notebook(self)
 

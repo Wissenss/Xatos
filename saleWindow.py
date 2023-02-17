@@ -3,7 +3,7 @@ from tkinter import ttk, messagebox
 
 from kernel.server import Server
 from kernel.errors import ErrorCode
-from kernel.types import Sell
+from kernel.types import Sale
 
 from componentes.largeButton import LargeButton
 from constants import AccessMode
@@ -13,10 +13,11 @@ from payment import Payment
 
 from showError import ShowError
 
-class SellWindow(tk.Toplevel):
+class SaleWindow(tk.Toplevel):
     def __init__(self, owner):
         super().__init__(owner)
         self.geometry("800x500")
+        self.minsize(800, 500)
         self.title("Punto de Venta")
         self.iconbitmap("./recursos/Fatcow-Farm-Fresh-Cash-stack.ico")
 
@@ -61,10 +62,10 @@ class SellWindow(tk.Toplevel):
         self.list.heading("Cantidad", text="Cantidad")
         self.list.heading("SubTotal", text="SubTotal")
 
-        self.list.column("Producto", anchor=tk.W)
-        self.list.column("PrecioUnitario", anchor=tk.CENTER)
-        self.list.column("Cantidad", anchor=tk.CENTER)
-        self.list.column("SubTotal", anchor=tk.E)
+        self.list.column("Producto", anchor=tk.W, width=10)
+        self.list.column("PrecioUnitario", anchor=tk.CENTER, width=10)
+        self.list.column("Cantidad", anchor=tk.CENTER, width=10)
+        self.list.column("SubTotal", anchor=tk.E, width=10)
 
         self.list.tag_configure('font', font=(None, 12))
         self.list.tag_configure('odd', background="#dedede")
@@ -88,12 +89,8 @@ class SellWindow(tk.Toplevel):
     def generatePayment(self):
         if self.Total == None or self.Total <= 0:
             return
-
-        sell = Sell((
-            None,
-            self.Total
-        ))
-        Payment(self, sell)
+        
+        Payment(self, self.Total)
 
     def enterProduct(self, event):
         self.addProduct()
@@ -169,14 +166,14 @@ class SellWindow(tk.Toplevel):
 
         row = self.list.item(iid)["values"]
         name = row[0]
-        price = float(row[1])
-        cantidad = float(row[2]) - 1
+        price = float(row[1].replace("$", ""))
+        cantidad = int(row[2]) - 1
 
         self.list.item(iid, values=(
             name,
-            price,
-            float(cantidad),
-            price * cantidad
+            f"${price:.2f}",
+            cantidad,
+            f"${price * cantidad:.2f}"
         ))
 
         self.updatePrice()

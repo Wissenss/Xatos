@@ -18,6 +18,7 @@ class ProductsCatalog(simpledialog.Dialog):
     def body(self, frame):
         frame.pack(expand=True, fill=tk.BOTH, side=tk.TOP)
         self.geometry("400x400")
+        self.minsize(400, 400)
         self.title("Catálogo de Productos")
         self.iconbitmap(default="./recursos/Fatcow-Farm-Fresh-Basket.ico")
         content = {
@@ -42,6 +43,9 @@ class ProductsCatalog(simpledialog.Dialog):
         self.list = ttk.Treeview(frame, columns=("Nombre", "Codigo"), show="headings")
         self.list.heading("Nombre", text="Nombre")
         self.list.heading("Codigo", text="Código")
+
+        self.list.column("Nombre", width=5)
+        self.list.column("Codigo", width=5)
 
         self.list.column("Codigo", anchor=tk.CENTER)
 

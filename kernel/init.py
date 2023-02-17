@@ -22,4 +22,22 @@ try:
 except:
     print("Fail")
 
+print("Creating table \"Sales\"...", end=" ")
+
+try:
+    #CreationDate format YYYY-MM-DD HH:MM:SS.SSS
+    cursor.execute("""
+    CREATE TABLE Sales(
+        SaleId INTEGER PRIMARY KEY AUTOINCREMENT,
+        CreationDate VARCHAR(10), 
+        Total REAL,
+        CashPayment REAL,
+        CardPayment REAL
+    );
+    """)
+    connection.commit()
+    print("Success")
+except:
+    print("Fail")
+
 connection.close()

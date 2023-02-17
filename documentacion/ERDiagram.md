@@ -1,10 +1,16 @@
 ```mermaid
 erDiagram
     Products{
-        int ProductId
-        string Name
-        string Description
-        decimal Price
-        string Code
+        Int ProductId
+        String Name
+        String Description
+        Rel Price
+        String Code
+    }
+
+    Sales{
+        Int SaleId
+        Text CreationDate
+        Real Total
     }
 ```

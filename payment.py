@@ -1,14 +1,16 @@
 import tkinter as tk
-from tkinter import simpledialog
+from tkinter import simpledialog, messagebox
+from datetime import datetime
 
-from kernel.types import Sell
+from kernel.types import Sale
+from kernel.server import Server
 
 from componentes.largeButton import LargeButton
 from componentes.currencyEntry import CurrencyEntry
 
 class Payment(simpledialog.Dialog):
-    def __init__(self, owner, data:Sell):
-        self.data = data
+    def __init__(self, owner, total):
+        self.total = total
         self.owner = owner
         super().__init__(parent=owner)
 
@@ -48,7 +50,7 @@ class Payment(simpledialog.Dialog):
         self.updateData()
 
     def updateData(self):
-        pending = self.data.Total
+        pending = self.total
 
         cashPayment = float(self.EEfectivo.get()) if self.EEfectivo.get() != "" else 0.00
         cardPayment = float(self.ETarjeta.get()) if self.ETarjeta.get() != "" else 0.00 
@@ -74,5 +76,27 @@ class Payment(simpledialog.Dialog):
         self.ETarjeta.focus_set()
 
     def Bend(self):
+        cashPayment = float(self.EEfectivo.get()) if self.EEfectivo.get() != "" else 0.00
+        cardPayment = float(self.ETarjeta.get()) if self.ETarjeta.get() != "" else 0.00
+        change = -self.total + cashPayment + cardPayment
+        if change < 0:
+            messagebox.showwarning(parent=self, title="Datos Incorrectos", message="El total de la venta es menor al pago recibido\nRevise los datos introducidos.")
+            return
+        
+        if cashPayment != 0:
+            cashPayment -= change
+        elif cardPayment != 0:
+            cardPayment -= change
+
+        today = datetime.now()
+        sale = Sale((
+            None,
+            today.strftime("%Y-%m-%d %H:%M:%S"),
+            self.total,
+            cashPayment,
+            cardPayment
+        ))
+        Server().SvcSales.setSale(True, sale)
+
         self.owner.clearData()
         self.destroy()

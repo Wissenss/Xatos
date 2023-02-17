@@ -6,7 +6,13 @@ class Product:
         self.Price = dataSet[3]
         self.Code = dataSet[4]
 
-class Sell:
+class Sale:
     def __init__(self, dataset):
-        self.SellId = dataset[0]
-        self.Total = dataset[1]
+        self.SaleId = dataset[0]
+        self.CreationDate = dataset[1]
+        self.Total = dataset[2]
+        self.CashPayment = dataset[3]
+        self.CardPayment = dataset[4]
+
+    def getDateAsDateTime(self):
+        return 
