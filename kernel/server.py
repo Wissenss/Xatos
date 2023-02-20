@@ -2,9 +2,11 @@ import sqlite3
 try:
     from svcProducts import SvcProducts
     from svcSales import SvcSales
+    from svcConfigs import SvcConfigs
 except:
     from kernel.svcProducts import SvcProducts
     from kernel.svcSales import SvcSales
+    from kernel.svcConfigs import SvcConfigs
 
 DATABASE_PATH = "./database.db"
 
@@ -16,6 +18,7 @@ class Server:
             
             cls.SvcProducts = SvcProducts(cls.connection, cls.cursor)
             cls.SvcSales = SvcSales(cls.connection, cls.cursor)
+            cls.SvcConfigs = SvcConfigs(cls.connection, cls.cursor)
 
             cls.instance = super(Server, cls).__new__(cls)
         return cls.instance

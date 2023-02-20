@@ -1,4 +1,5 @@
 import sqlite3
+import datetime
 
 try:
     from types import Sale
@@ -17,16 +18,23 @@ class SvcSales:
         query = ""
         if isCreate:
             query = """
-            INSERT INTO Sales(CreationDate, Total, CashPayment, CardPayment)
-            VALUES (?, ?, ?, ?);
+            INSERT INTO Sales(
+                CreationDate,
+                CreationTime, 
+                Total, 
+                CashPayment, 
+                CardPayment)
+            VALUES (?, ?, ?, ?, ?);
             """
             self.cursor.execute(query, (
-                sale.CreationDate,
+                sale.getDateAsStr(),
+                sale.getTimeAsStr(),
                 sale.Total,
                 sale.CashPayment,
                 sale.CardPayment
             ))
         else:
+            #this probably wont need to be implemented
             print("Not implemented yet")
 
         self.connection.commit()
@@ -39,7 +47,7 @@ class SvcSales:
         self.cursor.execute(query, (SaleId,))
         self.connection.commit()
 
-    def getSalesFrom(self, date):
+    def getSalesFrom(self, date)-> list[Sale]:
         query = """
             SELECT * FROM Sales WHERE CreationDate = ?; 
         """
@@ -48,9 +56,16 @@ class SvcSales:
         sales = [Sale(dataSet) for dataSet in self.cursor.fetchall()]
         return sales
 
-    def getSalesSince(self, since):
+    def getSalesSince(self, since)-> list[Sale]:
+        if isinstance(since, str):
+            pass
+        elif isinstance(since, datetime.date):
+            since = datetime.date.strftime(since, "%H:%M:%S")
+        else:
+            raise f"invalid input: {since}"
+
         query = """
-            SELECT * FROM Sales WHERE datetime(CreationDate) >= datetime(?) ORDER BY CreationDate;
+            SELECT * FROM Sales WHERE date(CreationDate) >= date(?) ORDER BY CreationDate DESC;
         """
 
         self.cursor.execute(query, (since,))
@@ -59,8 +74,15 @@ class SvcSales:
         return sales
 
     def deleteSales(self, date):
+        if isinstance(date, str):
+            pass
+        elif isinstance(date, datetime.date):
+            date = datetime.date.strftime(date, "%H:%M:%S")
+        else:
+            raise f"invalid input: {date}"
+
         query = """
-            DELETE * FROM Sales WHERE DateTime(CreationDate) = DateTime(?);
+            DELETE * FROM Sales WHERE date(CreationDate) = date(?);
         """
 
         self.cursor.execute(query, (date,))

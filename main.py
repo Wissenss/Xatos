@@ -1,10 +1,13 @@
 import tkinter as tk
+import config
 from tkinter import ttk
-from generalTab import GeneralTab
+from kernel import init
+from WTabGeneral import TabGeneral
 from kernel.server import Server
 
 class App(tk.Tk):
     def __init__(self):
+        config.update()
         super().__init__()
         self.geometry("800x500")
         self.minsize(800, 500)
@@ -17,7 +20,7 @@ class App(tk.Tk):
         self.tab_control = ttk.Notebook(self)
 
         self.tabs = {
-            GeneralTab : "General"
+            TabGeneral : "General"
         }
 
         for tab in self.tabs:
@@ -28,5 +31,4 @@ class App(tk.Tk):
         self.tab_control.pack(expand=1, fill=tk.BOTH)
 
 if __name__ == "__main__":
-
     App().mainloop()

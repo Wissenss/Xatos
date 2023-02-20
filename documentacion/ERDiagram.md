@@ -11,6 +11,15 @@ erDiagram
     Sales{
         Int SaleId
         Text CreationDate
+        Text CreationTime
         Real Total
+        Real CashPayment
+        Real CardPayment
+    }
+
+    Configs{
+        Int ConfigId
+        Text Name
+        Text Value
     }
 ```

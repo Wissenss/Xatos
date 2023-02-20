@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html> 
+    <head>
+        <title>ticket</title>
+        <!-- <link rel="stylesheet" href="ticket.css" type="text/css" /> -->
+
+        <style>
+            body {
+            background-color:#ffffffff;
+            }
+
+            .ticket{
+
+                margin: 8px;              /* Perimetro */
+                padding: 10px;           /* Area */
+                border-style: solid;
+                border-color: #000000;
+                border-width: 4px;           /*Se pueden modificar cada laso, solo debemos escribir la posicion del border*/
+                border-radius: 2px;
+                background-color: #ffffffff;
+                color: #000000
+
+            }
+
+            .title{
+                text-align: center; 
+                /* letter: spacing -10px; */
+            }
+
+            .timing{
+                text-align: right;
+            }
+
+            .items{
+                width: 90%;
+                text-align: center;
+                padding-top: 0px;
+            }
+
+        </style>
+
+    </head>
+    <body>
+        <div class="ticket">
+            
+            <p class="title" >{{ name}}<br/> {{ address }}</p>
+            <hr/>
+            <p class="timing">{{ date }}</p>
+            <P class="timing">{{ time }}</p>
+            <hr/>
+
+            <table class="items">
+                <tr>
+                    <td>Producto</td>
+                    <td>Precio</td>
+                    <td>Cantidad</td>
+                    <td>Sub Total</td>
+                </tr>
+                {% for item in items %}
+                <tr>
+                    <td>{{ item.Name }}</td>
+                    <td>{{ item.UnitPrice }}</td>
+                    <td>{{ item.Amount }}</td>
+                    <td>{{ item.SubTotal }}</td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td style="text-align: right;">Total:</td>
+                    <td>{{ total }}</td>
+                </tr>
+            </table>
+            
+            <hr/>
+            <p class="title" >Gracias por su compra<br/>Vuelva pronto</p>
+
+        <div/>
+    </body>
+</html>

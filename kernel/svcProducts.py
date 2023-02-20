@@ -27,7 +27,7 @@ class SvcProducts:
                 product.Code))
         else:
             query = """
-            UPDATE PRODUCTS 
+            UPDATE Products 
             SET
                 Name = ?,
                 Description = ?,
