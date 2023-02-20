@@ -1,5 +1,4 @@
 import tkinter as tk
-import config
 from tkinter import ttk
 from kernel import init
 from WTabGeneral import TabGeneral
@@ -7,7 +6,6 @@ from kernel.server import Server
 
 class App(tk.Tk):
     def __init__(self):
-        config.update()
         super().__init__()
         self.geometry("800x500")
         self.minsize(800, 500)

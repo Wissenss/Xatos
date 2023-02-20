@@ -2,8 +2,6 @@ import os
 import tkinter as tk
 from tkinter import ttk, messagebox
 
-import config
-
 from kernel.server import Server
 from kernel.errors import ErrorCode
 from kernel.types import Sale
