@@ -15,8 +15,8 @@ class TurnEnd(simpledialog.Dialog):
 
     def body(self, frame):
         self.geometry("250x100")
-        self.title("Iniciar Turno")
-        self.iconbitmap("./recursos/Fatcow-Farm-Fresh-Clock-play.ico")
+        self.title("Terminar Turno")
+        self.iconbitmap("./recursos/Fatcow-Farm-Fresh-Clock-stop.ico")
         self.resizable(False, False)
 
         frame.pack(expand=True)

@@ -228,10 +228,10 @@ class SaleWindow(tk.Toplevel):
 
             items.append(row)
 
-        total = self.priceDisplay.cget("text")
+        total = float(self.priceDisplay.cget("text").replace("$", ""))
         name = Server().SvcConfigs.getConfig("ShopName")
         address = Server().SvcConfigs.getConfig("ShopAddress")
-        payment = float(self.priceDisplay.get())
+        payment = float(self.priceDisplay.cget("text").replace("$", ""))
         change = payment - total
 
         vars = {

@@ -67,13 +67,9 @@ class SvcTurns:
         """
         self.cursor.execute(query)
         values = self.cursor.fetchone()
-        print(values)
         date = values[2]
         time = values[3]
         total += values[4]
-
-        # date = datetime.datetime.today().date().strftime("%Y-%m-%d")
-        # time = datetime.datetime.now().time().strftime("%H:%M:%S")
 
         query = """
         SELECT SUM(CashPayment) 
