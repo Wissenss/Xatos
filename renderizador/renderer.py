@@ -14,15 +14,20 @@ else:
     config = pdfkit.configuration(wkhtmltopdf="./wkhtmltox/bin/wkhtmltopdf.exe")
     env = Environment(loader=FileSystemLoader("./templates/"),)
 
-def render_ticket(shopName, shopAddress, items, total):
+def render_ticket(**vars):
     template = env.get_template("ticket.html")
     fecha = datetime.today().date().strftime("%d / %m / %Y")
     hora = datetime.today().time().strftime("%H : %M")
 
-    html = template.render(name=shopName, address=shopAddress, items=items, date=fecha, time=hora, total=total)
+    vars["date"] = fecha
+    vars["time"] = hora
 
-    # with open("my_new_file.html", "w") as fh:
-    #     fh.write(html)
+    html = template.render(**vars)
+
+    #si se corre renderer.py directo se guarda el html previo al render
+    if __name__ == "__main__":
+        with open("my_new_file.html", "w") as fh:
+            fh.write(html)
 
     file = from_string(html, OUTPUT_PATH, configuration=config)
 
@@ -45,4 +50,13 @@ if __name__ == "__main__":
     items.append(Row("Tequila", "$180", "1", "$180"))
     items.append(Row("Bateria AA", "$90", "1", "$90"))
 
-    render_ticket(items)
+    vars = {
+        "items" : items,
+        "total" : 350.00,
+        "name" : "Test Page",
+        "address" : "Some random address",
+        "payment" : 400.00,
+        "change" : 50.00
+    }
+
+    render_ticket(**vars)

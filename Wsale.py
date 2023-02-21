@@ -229,9 +229,19 @@ class SaleWindow(tk.Toplevel):
             items.append(row)
 
         total = self.priceDisplay.cget("text")
-
         name = Server().SvcConfigs.getConfig("ShopName")
         address = Server().SvcConfigs.getConfig("ShopAddress")
+        payment = float(self.priceDisplay.get())
+        change = payment - total
 
-        render_ticket(name, address, items, total)
+        vars = {
+            "name" : name,
+            "address" : address,
+            "total" : total,
+            "items" : items,
+            "payment" : payment,
+            "change" : change
+        }
+
+        render_ticket(**vars)
         os.startfile("out.pdf", "print")

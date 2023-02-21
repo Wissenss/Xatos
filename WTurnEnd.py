@@ -21,12 +21,12 @@ class TurnEnd(simpledialog.Dialog):
 
         frame.pack(expand=True)
 
-        self.cashExpected = tk.Label(frame, text=f"Efectivo Esperado: {0.00:.2f}")
+        self.cashExpected = tk.Label(frame, text=f"Efectivo Esperado: {0.00:.2f}", font=(None, 12))
         self.cashExpected.grid(row=0, column=0, columnspan=2, sticky="nswe")
 
-        tk.Label(frame, text="En caja").grid(row=1, column=0)
+        tk.Label(frame, text="En caja").grid(row=1, column=0, pady=(10, 0), padx=5)
         self.cashOnBox = CurrencyEntry(frame)
-        self.cashOnBox.grid(row=1, column=1)
+        self.cashOnBox.grid(row=1, column=1, pady=(10, 0))
 
         self.load()
 

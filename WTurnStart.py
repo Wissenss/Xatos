@@ -20,7 +20,7 @@ class TurnStart(simpledialog.Dialog):
 
         frame.pack(expand=True)
 
-        tk.Label(frame, text="Efectivo en caja").grid(row=0, column=0)
+        tk.Label(frame, text="Efectivo en caja").grid(row=0, column=0, padx=5)
         self.cashOnBox = CurrencyEntry(frame)
         self.cashOnBox.grid(row=0, column=1)
 
