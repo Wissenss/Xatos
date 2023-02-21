@@ -20,6 +20,7 @@ class ProductData(simpledialog.Dialog):
         self.geometry("400x215")
         self.title("Datos del Producto")
         self.iconbitmap("./recursos/Fatcow-Farm-Fresh-Basket.ico")   
+        self.resizable(False, False)
         frame.pack(expand=True, fill=tk.BOTH)
 
         frame.pack(side=tk.TOP, expand=True, padx=15, pady=(10, 0))  
@@ -49,7 +50,7 @@ class ProductData(simpledialog.Dialog):
         lowerBar.pack(side=tk.TOP, fill=tk.X, padx=10, pady=(0, 10), ipadx=5)
 
         if self.Mode == AccessMode.READ:
-            BCerrar = tk.Button(lowerBar, text="Cancelar", command=self.BCancelar)
+            BCerrar = ttk.Button(lowerBar, text="Cerrar", command=self.BCancelar)
             BCerrar.pack(side=tk.RIGHT, pady=5)
 
             self.ENombre.configure(state=tk.DISABLED)

@@ -5,6 +5,26 @@ DATABASE_PATH = ".\database.db"
 connection = sqlite3.connect(DATABASE_PATH)
 cursor = connection.cursor()
 
+print("Creating table \"Turns\"...", end="")
+
+try:
+    cursor.execute("""
+    CREATE TABLE Turns(
+        TurnId INTEGER PRIMARY KEY AUTOINCREMENT,
+        IsOpen INTEGER,
+        FechaInicio VARCHAR(10),
+        HoraInicio VARCHA(10),
+        EfectivoInicio REAL,
+        FechaFin VARCHAR(10),
+        HoraFin VARCHAR(10),
+        EfectivoFin REAL 
+    );
+    """)
+    connection.commit()
+    print("Success")
+except:
+    print("Fail")
+
 print("Creating table \"Configs\"...", end=" ")
 
 try:

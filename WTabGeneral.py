@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox
 from componentes.navBar import NavBar
 from componentes.largeButton import LargeButton
 
@@ -8,13 +9,20 @@ from WproductsCatalog import ProductsCatalog
 from Wsale import SaleWindow
 from WsalesReport import SalesReport
 from Wconfig import Configs
+from WTurnStart import TurnStart
+from WTurnEnd import TurnEnd
 
 from constants import AccessMode
 
 class TabGeneral(tk.Frame):
     def __init__(self, owner: tk.Tk):
-        # self.owner = owner
         super().__init__(owner)
+
+        self.DVenta = None
+
+        topBar = tk.Frame(self)
+        topBar.pack(side=tk.TOP, fill=tk.X)
+
         content = {
             "":[
                 ("Venta", "./recursos/Fatcow-Farm-Fresh-Cash-stack.32.png", self.BVentaClick),
@@ -23,18 +31,25 @@ class TabGeneral(tk.Frame):
             "Reportes":[
                 ("Reporte", "./recursos/Fatcow-Farm-Fresh-Document-index.32.png", self.BInformeVentas)
             ],
-            "Configuracion":[
-                ("Configuracion", "./recursos/Fatcow-Farm-Fresh-Cog.32.png", self.BConfiguracion)
-            ]
+            "Turnos":[
+                ("Iniciar Turno", "./recursos/Fatcow-Farm-Fresh-Clock-play.32.png", self.BIniciarTurno),
+                ("Terminar Turno", "./recursos/Fatcow-Farm-Fresh-Clock-stop.32.png", self.BTerminarTurno),
+            ],
         }
-        bar = NavBar(self, content, False)
-        bar.render()
-        bar.pack(side=tk.TOP, fill=tk.X, expand=False, padx=5, pady=5)
+        self.bar = NavBar(topBar, content, False)
+        self.bar.render()
+        self.bar.pack(side=tk.LEFT, expand=False, padx=5, pady=5)
 
-        self.DVenta = None
-        
+        bconfig = LargeButton(topBar, "Configuración", "./recursos/Fatcow-Farm-Fresh-Cog.32.png", self.BConfiguracion)
+        bconfig.pack(side=tk.RIGHT, padx=5, pady=5)
 
     def BVentaClick(self):
+        if not(Server().SvcTurns.isTurnOpen()):
+            messagebox.showerror(parent=self, title="Error", message="No existe un turno abierto. Debe iniciar uno nuevo.")
+            return
+
+        #known bug
+
         if self.DVenta == None:   
             self.DVenta = SaleWindow(self)
             self.DVenta.protocol("WM_DELETE_WINDOW", self.DVentaClosing)
@@ -50,6 +65,18 @@ class TabGeneral(tk.Frame):
 
     def BConfiguracion(self):
         Configs(self, AccessMode.UPDATE)
+
+    def BIniciarTurno(self):
+        if Server().SvcTurns.isTurnOpen():
+            messagebox.showerror(parent=self, title="Error", message="Ya existe un turno abierto. Cierre el turno actual antes de iniciar uno nuevo.")
+            return
+        TurnStart(self)
+       
+    def BTerminarTurno(self):
+        if not(Server().SvcTurns.isTurnOpen()):
+            messagebox.showerror(parent=self, title="Error", message="No existe un turno abierto. Debe iniciar uno nuevo.")
+            return
+        TurnEnd(self)
 
     #Handlers
     def DVentaClosing(self):

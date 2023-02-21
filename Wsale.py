@@ -35,7 +35,7 @@ class SaleWindow(tk.Toplevel):
         buttoncontrol.pack(expand=True)
 
         LargeButton(buttoncontrol, "Seleccionar", "./recursos/Fatcow-Farm-Fresh-Basket-put.32.png", self.selectProduct).grid(row=0, column=0)
-        LargeButton(buttoncontrol, "Cancelar", "./recursos/Fatcow-Farm-Fresh-Bin-closed.32.png", self.cancelSell).grid(row=0, column=3)
+        LargeButton(buttoncontrol, "Cancelar", "./recursos/Fatcow-Farm-Fresh-Bin-empty.32.png", self.cancelSell).grid(row=0, column=3)
 
         ttk.Separator(buttoncontrol, orient=tk.HORIZONTAL).grid(row=1, column=0, columnspan=4, sticky="nswe", padx=5)
 
@@ -203,7 +203,7 @@ class SaleWindow(tk.Toplevel):
         self.BfocusBarCode()
 
     def cancelSell(self):
-        if not(messagebox.askokcancel(parent=self, title="", message=f"Esta accion borrará todos los productos marcados\nDesea continuar?")):
+        if not(messagebox.askokcancel(parent=self, title="Cancelar Venta", message=f"Esta accion borrará todos los productos marcados\nDesea continuar?")):
             return
         self.clearData()
 

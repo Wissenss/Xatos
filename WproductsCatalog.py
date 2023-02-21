@@ -73,7 +73,7 @@ class ProductsCatalog(simpledialog.Dialog):
             return
 
         values = self.list.item(iid)["values"]
-        if not(messagebox.askokcancel(title="", message=f"Esta seguro de que desea eliminar el producto seleccionado? Esta accion no se puede deshacer\nNombre: {values[0]}\nCódigo: {values[1]}")):
+        if not(messagebox.askokcancel(title="Eliminar Producto", message=f"Esta seguro de que desea eliminar el producto seleccionado? Esta acción no se puede deshacer\nNombre: {values[0]}\nCódigo: {values[1]}")):
             return
 
         Server().SvcProducts.deleteProduct(self.list.focus())
